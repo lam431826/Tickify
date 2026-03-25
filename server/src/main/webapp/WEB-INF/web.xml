@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee
+         https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd"
+         version="5.0"
+         metadata-complete="true">
+
+    <display-name>Tickify API Server</display-name>
+
+    <!-- Environment variable context parameters (fallbacks if system env not set) -->
+    <context-param>
+        <param-name>DB_URL</param-name>
+        <param-value>${DB_URL}</param-value>
+    </context-param>
+    <context-param>
+        <param-name>DB_USER</param-name>
+        <param-value>${DB_USER}</param-value>
+    </context-param>
+    <context-param>
+        <param-name>DB_PASSWORD</param-name>
+        <param-value>${DB_PASSWORD}</param-value>
+    </context-param>
+    <context-param>
+        <param-name>JWT_SECRET</param-name>
+        <param-value>${JWT_SECRET}</param-value>
+    </context-param>
+    <context-param>
+        <param-name>TMDB_API_KEY</param-name>
+        <param-value>${TMDB_API_KEY}</param-value>
+    </context-param>
+    <context-param>
+        <param-name>CLIENT_URL</param-name>
+        <param-value>${CLIENT_URL}</param-value>
+    </context-param>
+
+    <!-- Application lifecycle listener — initializes DBConfig -->
+    <listener>
+        <listener-class>com.quickshow.config.AppInitializer</listener-class>
+    </listener>
+
+    <!-- CORS Filter - must be first -->
+    <filter>
+        <filter-name>CORSFilter</filter-name>
+        <filter-class>com.quickshow.filter.CORSFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>CORSFilter</filter-name>
+        <url-pattern>/api/*</url-pattern>
+    </filter-mapping>
+
+    <!-- ==================== AUTH SERVLETS ==================== -->
+    <servlet>
+        <servlet-name>RegisterServlet</servlet-name>
+        <servlet-class>com.quickshow.servlet.auth.RegisterServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>RegisterServlet</servlet-name>
+        <url-pattern>/api/auth/register</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>LoginServlet</servlet-name>
+        <servlet-class>com.quickshow.servlet.auth.LoginServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>LoginServlet</servlet-name>
+        <url-pattern>/api/auth/login</url-pattern>
+    </servlet-mapping>
+
+    <!-- ==================== SHOW SERVLETS ==================== -->
+    <servlet>
+        <servlet-name>GetAllShowsServlet</servlet-name>
+        <servlet-class>com.quickshow.servlet.show.GetAllShowsServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>GetAllShowsServlet</servlet-name>
+        <url-pattern>/api/show/all</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>GetNowPlayingServlet</servlet-name>
+        <servlet-class>com.quickshow.servlet.show.GetNowPlayingServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>GetNowPlayingServlet</servlet-name>
+        <url-pattern>/api/show/now-playing</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>AddShowServlet</servlet-name>
+        <servlet-class>com.quickshow.servlet.show.AddShowServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AddShowServlet</servlet-name>
+        <url-pattern>/api/show/add</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>GetShowByIdServlet</servlet-name>
+        <servlet-class>com.quickshow.servlet.show.GetShowByIdServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>GetShowByIdServlet</servlet-name>
+        <url-pattern>/api/show/*</url-pattern>
+    </servlet-mapping>
+
+    <!-- ==================== BOOKING SERVLETS ==================== -->
+    <servlet>
+        <servlet-name>GetOccupiedSeatsServlet</servlet-name>
+        <servlet-class>com.quickshow.servlet.booking.GetOccupiedSeatsServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>GetOccupiedSeatsServlet</servlet-name>
+        <url-pattern>/api/booking/seats/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>CreateBookingServlet</servlet-name>
+        <servlet-class>com.quickshow.servlet.booking.CreateBookingServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CreateBookingServlet</servlet-name>
+        <url-pattern>/api/booking/create</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>GetBookingServlet</servlet-name>
+        <servlet-class>com.quickshow.servlet.booking.GetBookingServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>GetBookingServlet</servlet-name>
+        <url-pattern>/api/booking/id/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>PayBookingServlet</servlet-name>
+        <servlet-class>com.quickshow.servlet.booking.PayBookingServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>PayBookingServlet</servlet-name>
+        <url-pattern>/api/booking/pay</url-pattern>
+    </servlet-mapping>
+
+    <!-- ==================== USER SERVLETS ==================== -->
+    <servlet>
+        <servlet-name>GetFavoritesServlet</servlet-name>
+        <servlet-class>com.quickshow.servlet.user.GetFavoritesServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>GetFavoritesServlet</servlet-name>
+        <url-pattern>/api/user/favorites</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>UpdateFavoriteServlet</servlet-name>
+        <servlet-class>com.quickshow.servlet.user.UpdateFavoriteServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UpdateFavoriteServlet</servlet-name>
+        <url-pattern>/api/user/update-favorite</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>GetUserBookingsServlet</servlet-name>
+        <servlet-class>com.quickshow.servlet.user.GetUserBookingsServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>GetUserBookingsServlet</servlet-name>
+        <url-pattern>/api/user/bookings</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>UpdateProfileServlet</servlet-name>
+        <servlet-class>com.quickshow.servlet.user.UpdateProfileServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UpdateProfileServlet</servlet-name>
+        <url-pattern>/api/user/update-profile</url-pattern>
+    </servlet-mapping>
+
+    <!-- ==================== ADMIN SERVLETS ==================== -->
+    <servlet>
+        <servlet-name>IsAdminServlet</servlet-name>
+        <servlet-class>com.quickshow.servlet.admin.IsAdminServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>IsAdminServlet</servlet-name>
+        <url-pattern>/api/admin/is-admin</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>DashboardServlet</servlet-name>
+        <servlet-class>com.quickshow.servlet.admin.DashboardServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>DashboardServlet</servlet-name>
+        <url-pattern>/api/admin/dashboard</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>GetAllShowsAdminServlet</servlet-name>
+        <servlet-class>com.quickshow.servlet.admin.GetAllShowsAdminServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>GetAllShowsAdminServlet</servlet-name>
+        <url-pattern>/api/admin/all-shows</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>GetAllBookingsServlet</servlet-name>
+        <servlet-class>com.quickshow.servlet.admin.GetAllBookingsServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>GetAllBookingsServlet</servlet-name>
+        <url-pattern>/api/admin/all-bookings</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>MarkBookingPaidServlet</servlet-name>
+        <servlet-class>com.quickshow.servlet.admin.MarkBookingPaidServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>MarkBookingPaidServlet</servlet-name>
+        <url-pattern>/api/admin/booking/mark-paid</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>DeleteBookingServlet</servlet-name>
+        <servlet-class>com.quickshow.servlet.admin.DeleteBookingServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>DeleteBookingServlet</servlet-name>
+        <url-pattern>/api/admin/booking/delete</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>DeleteShowServlet</servlet-name>
+        <servlet-class>com.quickshow.servlet.admin.DeleteShowServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>DeleteShowServlet</servlet-name>
+        <url-pattern>/api/admin/show/delete</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>UpdateShowServlet</servlet-name>
+        <servlet-class>com.quickshow.servlet.admin.UpdateShowServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UpdateShowServlet</servlet-name>
+        <url-pattern>/api/admin/show/update</url-pattern>
+    </servlet-mapping>
+
+    <!-- Session timeout in minutes -->
+    <session-config>
+        <session-timeout>30</session-timeout>
+    </session-config>
+
+    <!-- Default content type -->
+    <mime-mapping>
+        <extension>json</extension>
+        <mime-type>application/json</mime-type>
+    </mime-mapping>
+
+</web-app>

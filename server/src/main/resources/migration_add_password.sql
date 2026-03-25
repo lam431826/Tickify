@@ -1,0 +1,1 @@
+ALTER TABLE Users ADD password_hash NVARCHAR(255) NULL;

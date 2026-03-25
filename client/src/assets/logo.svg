@@ -1,0 +1,29 @@
+<svg width="160" height="36" viewBox="0 0 160 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Ticket icon -->
+  <!-- Main body -->
+  <path d="M4 8C4 5.79086 5.79086 4 8 4H28C30.2091 4 32 5.79086 32 8V13C30.3431 13 29 14.3431 29 16C29 17.6569 30.3431 19 32 19V24C32 26.2091 30.2091 28 28 28H8C5.79086 28 4 26.2091 4 24V19C5.65685 19 7 17.6569 7 16C7 14.3431 5.65685 13 4 13V8Z" fill="#F84565"/>
+  <!-- Dashed divider line on ticket -->
+  <line x1="18" y1="7" x2="18" y2="10" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="2 2"/>
+  <line x1="18" y1="22" x2="18" y2="25" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="2 2"/>
+  <!-- Checkmark -->
+  <path d="M11 16.5L14.5 20L23 12" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Wordmark: Tickify -->
+  <!-- T -->
+  <path d="M42 9H56V12H51V27H47V12H42V9Z" fill="white"/>
+  <!-- i (dot + stem) -->
+  <circle cx="59.5" cy="10" r="2" fill="white"/>
+  <rect x="57.5" y="14" width="4" height="13" rx="1" fill="white"/>
+  <!-- c -->
+  <path d="M75 19.5C75 22.5376 72.9853 25 70.5 25C68.0147 25 66 22.5376 66 19.5C66 16.4624 68.0147 14 70.5 14C72.4 14 74.0667 15.3333 74.7 17H71.5C71.2239 16.4477 70.9 16.2 70.5 16.2C69.3954 16.2 68.5 17.7 68.5 19.5C68.5 21.3 69.3954 22.8 70.5 22.8C70.9 22.8 71.2239 22.5523 71.5 22H74.7C74.0667 23.6667 72.4 25 70.5 25Z" fill="white"/>
+  <!-- k -->
+  <rect x="77" y="9" width="3.5" height="18" rx="1" fill="white"/>
+  <path d="M80.5 19.5L87 14H84L78.5 19.5L84 25H87L80.5 19.5Z" fill="white"/>
+  <!-- i (dot + stem) -->
+  <circle cx="90.5" cy="10" r="2" fill="white"/>
+  <rect x="88.5" y="14" width="4" height="13" rx="1" fill="white"/>
+  <!-- f -->
+  <path d="M97 27V16.5H95V14H97V12.5C97 10.0147 98.5147 9 101 9H103V11.5H101.5C100.672 11.5 100 12.0 100 12.8V14H103V16.5H100V27H97Z" fill="white"/>
+  <!-- y -->
+  <path d="M106 14H109.5L113 22L116.5 14H120L114 28C113.2 29.8 112 30.5 110 30.5H108V28H109.5C110.3 28 110.8 27.7 111 27L111.5 26L106 14Z" fill="white"/>
+</svg>
