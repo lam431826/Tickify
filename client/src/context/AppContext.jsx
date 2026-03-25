@@ -1,7 +1,8 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import translations from "../lib/translations";
 
 axios.defaults.baseURL = import.meta.env.VITE_BASE_URL;
 
@@ -9,6 +10,17 @@ export const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
   const [isAdmin, setIsAdmin] = useState(false);
+  const [language, setLanguage] = useState(() => localStorage.getItem("tickify_lang") || "en");
+
+  const t = useCallback((key) => translations[language]?.[key] ?? key, [language]);
+
+  const toggleLanguage = () => {
+    setLanguage((prev) => {
+      const next = prev === "en" ? "vi" : "en";
+      localStorage.setItem("tickify_lang", next);
+      return next;
+    });
+  };
   const [shows, setShows] = useState([]);
   const [favoriteMovies, setFavoriteMovies] = useState([]);
   const [user, setUser] = useState(null); // {id, name, email, isAdmin}
@@ -126,6 +138,9 @@ export const AppProvider = ({ children }) => {
     fetchFavoriteMovies,
     fetchIsAdmin,
     image_base_url,
+    language,
+    toggleLanguage,
+    t,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

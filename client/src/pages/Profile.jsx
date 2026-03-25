@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 import BlurCircle from "../components/BlurCircle";
 
 const Profile = () => {
-  const { user, axios, getToken, login } = useAppContext();
+  const { user, axios, getToken, login, t } = useAppContext();
 
   const [name, setName] = useState(user?.name || "");
   const [email, setEmail] = useState(user?.email || "");
@@ -62,7 +62,7 @@ const Profile = () => {
       <BlurCircle top="100px" left="0" />
       <BlurCircle bottom="100px" right="0" />
 
-      <h1 className="text-2xl font-semibold mb-8 self-start md:self-auto">My Profile</h1>
+      <h1 className="text-2xl font-semibold mb-8 self-start md:self-auto">{t("my_profile")}</h1>
 
       <form
         onSubmit={handleSave}
@@ -83,7 +83,7 @@ const Profile = () => {
 
         {/* Name */}
         <div>
-          <label className="block text-sm text-gray-400 mb-1">Display Name</label>
+          <label className="block text-sm text-gray-400 mb-1">{t("display_name")}</label>
           <input
             type="text"
             value={name}
@@ -95,7 +95,7 @@ const Profile = () => {
 
         {/* Email */}
         <div>
-          <label className="block text-sm text-gray-400 mb-1">Email</label>
+          <label className="block text-sm text-gray-400 mb-1">{t("email")}</label>
           <input
             type="email"
             value={email}
@@ -106,40 +106,40 @@ const Profile = () => {
         </div>
 
         <hr className="border-primary/20" />
-        <p className="text-sm text-gray-400">Change Password <span className="text-xs">(leave blank to keep current)</span></p>
+        <p className="text-sm text-gray-400">{t("change_password")} <span className="text-xs">({t("leave_blank")})</span></p>
 
         {/* Current password */}
         <div>
-          <label className="block text-sm text-gray-400 mb-1">Current Password</label>
+          <label className="block text-sm text-gray-400 mb-1">{t("current_password")}</label>
           <input
             type="password"
             value={currentPassword}
             onChange={(e) => setCurrentPassword(e.target.value)}
-            placeholder="Required only when changing password"
+            placeholder={t("current_password_placeholder")}
             className="w-full bg-transparent border border-gray-600 rounded-md px-3 py-2 outline-none focus:border-primary text-sm transition"
           />
         </div>
 
         {/* New password */}
         <div>
-          <label className="block text-sm text-gray-400 mb-1">New Password</label>
+          <label className="block text-sm text-gray-400 mb-1">{t("new_password")}</label>
           <input
             type="password"
             value={newPassword}
             onChange={(e) => setNewPassword(e.target.value)}
-            placeholder="Min 6 characters"
+            placeholder={t("new_password_placeholder")}
             className="w-full bg-transparent border border-gray-600 rounded-md px-3 py-2 outline-none focus:border-primary text-sm transition"
           />
         </div>
 
         {/* Confirm new password */}
         <div>
-          <label className="block text-sm text-gray-400 mb-1">Confirm New Password</label>
+          <label className="block text-sm text-gray-400 mb-1">{t("confirm_password")}</label>
           <input
             type="password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
-            placeholder="Re-enter new password"
+            placeholder={t("confirm_password_placeholder")}
             className="w-full bg-transparent border border-gray-600 rounded-md px-3 py-2 outline-none focus:border-primary text-sm transition"
           />
         </div>
@@ -149,7 +149,7 @@ const Profile = () => {
           disabled={saving}
           className="w-full bg-primary hover:bg-primary/90 transition text-white py-2.5 rounded-lg font-semibold disabled:opacity-60 cursor-pointer"
         >
-          {saving ? "Saving..." : "Save Changes"}
+          {saving ? t("saving") : t("save_changes")}
         </button>
       </form>
     </div>

@@ -8,7 +8,7 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const { user, logout, favoriteMovies, shows } = useAppContext();
+  const { user, logout, favoriteMovies, shows, language, toggleLanguage, t } = useAppContext();
 
   const navigate = useNavigate();
   const searchRef = useRef(null);
@@ -58,52 +58,12 @@ const Navbar = () => {
           onClick={() => setIsOpen(!isOpen)}
         />
 
-        <Link
-          onClick={() => {
-            scrollTo(0, 0);
-            setIsOpen(false);
-          }}
-          to="/"
-        >
-          Home
-        </Link>
-        <Link
-          onClick={() => {
-            scrollTo(0, 0);
-            setIsOpen(false);
-          }}
-          to="/movies"
-        >
-          Movies
-        </Link>
-        <Link
-          onClick={() => {
-            scrollTo(0, 0);
-            setIsOpen(false);
-          }}
-          to="/"
-        >
-          Theaters
-        </Link>
-        <Link
-          onClick={() => {
-            scrollTo(0, 0);
-            setIsOpen(false);
-          }}
-          to="/"
-        >
-          Releases
-        </Link>
+        <Link onClick={() => { scrollTo(0, 0); setIsOpen(false); }} to="/">{t("nav_home")}</Link>
+        <Link onClick={() => { scrollTo(0, 0); setIsOpen(false); }} to="/movies">{t("nav_movies")}</Link>
+        <Link onClick={() => { scrollTo(0, 0); setIsOpen(false); }} to="/">{t("nav_theaters")}</Link>
+        <Link onClick={() => { scrollTo(0, 0); setIsOpen(false); }} to="/">{t("nav_releases")}</Link>
         {favoriteMovies.length > 0 && (
-          <Link
-            onClick={() => {
-              scrollTo(0, 0);
-              setIsOpen(false);
-            }}
-            to="/favorite"
-          >
-            Favorites
-          </Link>
+          <Link onClick={() => { scrollTo(0, 0); setIsOpen(false); }} to="/favorite">{t("nav_favorites")}</Link>
         )}
       </div>
 
@@ -116,7 +76,7 @@ const Navbar = () => {
                 autoFocus
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search movies..."
+                placeholder={t("nav_search_placeholder")}
                 className="w-48 bg-black/60 border border-gray-600 rounded-full px-4 py-1.5 text-sm outline-none focus:border-primary transition"
               />
               <XIcon
@@ -158,12 +118,20 @@ const Navbar = () => {
             </div>
           )}
         </div>
+        {/* Language toggle */}
+        <button
+          onClick={toggleLanguage}
+          className="px-3 py-1 rounded-full border border-gray-600 hover:border-primary/60 text-xs font-semibold text-gray-300 hover:text-white transition cursor-pointer"
+        >
+          {language === "en" ? "VI" : "EN"}
+        </button>
+
         {!user ? (
           <Link
             to="/login"
             className="px-4 py-1 sm:px-7 sm:py-2 bg-primary hover:bg-primary-dull transition rounded-full font-medium cursor-pointer"
           >
-            Sign In
+            {t("nav_signin")}
           </Link>
         ) : (
           <div className="relative group">
@@ -183,20 +151,20 @@ const Navbar = () => {
                 onClick={() => navigate("/my-bookings")}
                 className="w-full text-left px-4 py-2.5 text-sm hover:bg-primary/20 transition"
               >
-                My Bookings
+                {t("nav_my_bookings")}
               </button>
               <button
                 onClick={() => navigate("/profile")}
                 className="w-full text-left px-4 py-2.5 text-sm hover:bg-primary/20 transition"
               >
-                Edit Profile
+                {t("nav_edit_profile")}
               </button>
               <hr className="border-primary/20" />
               <button
                 onClick={logout}
                 className="w-full text-left px-4 py-2.5 text-sm text-red-400 hover:bg-red-600/10 transition"
               >
-                Logout
+                {t("nav_logout")}
               </button>
             </div>
           </div>

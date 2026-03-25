@@ -8,7 +8,7 @@ import { dateFormat } from "../lib/dateFormat";
 
 const Payment = () => {
   const { bookingId } = useParams();
-  const { axios, getToken, user, sessionReady, image_base_url } = useAppContext();
+  const { axios, getToken, user, sessionReady, image_base_url, t } = useAppContext();
   const navigate = useNavigate();
   const currency = import.meta.env.VITE_CURRENCY;
 
@@ -72,12 +72,12 @@ const Payment = () => {
     <div className="relative px-6 md:px-16 lg:px-40 pt-30 md:pt-40 pb-20 min-h-screen flex flex-col items-center">
       <BlurCircle top="100px" left="0" />
       <BlurCircle bottom="100px" right="0" />
-      <h1 className="text-2xl font-semibold mb-8 w-full max-w-4xl">Complete Payment</h1>
+      <h1 className="text-2xl font-semibold mb-8 w-full max-w-4xl">{t("complete_payment")}</h1>
 
       <div className="flex flex-col lg:flex-row gap-8 w-full max-w-4xl">
         {/* Booking Summary */}
         <div className="bg-primary/10 border border-primary/20 rounded-xl p-6 lg:w-80 h-max">
-          <h2 className="font-semibold text-lg mb-4">Order Summary</h2>
+          <h2 className="font-semibold text-lg mb-4">{t("order_summary")}</h2>
           {booking && (
             <>
               <img
@@ -89,15 +89,15 @@ const Payment = () => {
               <p className="text-gray-400 text-sm mt-1">{dateFormat(booking.show.showDateTime)}</p>
               <div className="mt-4 space-y-2 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-gray-400">Seats</span>
+                  <span className="text-gray-400">{t("seats")}</span>
                   <span>{booking.bookedSeats.join(", ")}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-400">Tickets</span>
+                  <span className="text-gray-400">{t("tickets")}</span>
                   <span>{booking.bookedSeats.length}</span>
                 </div>
                 <div className="border-t border-primary/20 pt-2 flex justify-between font-semibold text-base">
-                  <span>Total</span>
+                  <span>{t("total")}</span>
                   <span className="text-primary">{currency}{booking.amount}</span>
                 </div>
               </div>
@@ -107,7 +107,7 @@ const Payment = () => {
 
         {/* Payment Form */}
         <form onSubmit={handlePay} className="flex-1 bg-primary/10 border border-primary/20 rounded-xl p-6">
-          <h2 className="font-semibold text-lg mb-6">Card Details</h2>
+          <h2 className="font-semibold text-lg mb-6">{t("card_details")}</h2>
 
           {/* Mock Visa Card Visual */}
           <div className="bg-gradient-to-br from-primary/40 to-primary/10 border border-primary/30 rounded-2xl p-5 mb-6 h-44 flex flex-col justify-between">
@@ -126,7 +126,7 @@ const Payment = () => {
 
           <div className="space-y-4">
             <div>
-              <label className="block text-sm text-gray-400 mb-1">Card Holder Name</label>
+              <label className="block text-sm text-gray-400 mb-1">{t("card_holder")}</label>
               <input
                 type="text" value={cardName}
                 onChange={e => setCardName(e.target.value.toUpperCase())}
@@ -135,7 +135,7 @@ const Payment = () => {
               />
             </div>
             <div>
-              <label className="block text-sm text-gray-400 mb-1">Card Number</label>
+              <label className="block text-sm text-gray-400 mb-1">{t("card_number")}</label>
               <input
                 type="text" value={cardNumber}
                 onChange={e => setCardNumber(e.target.value.replace(/\D/g, "").slice(0, 16))}
@@ -145,7 +145,7 @@ const Payment = () => {
             </div>
             <div className="flex gap-4">
               <div className="flex-1">
-                <label className="block text-sm text-gray-400 mb-1">Expiry Date</label>
+                <label className="block text-sm text-gray-400 mb-1">{t("expiry_date")}</label>
                 <input
                   type="text" value={expiry}
                   onChange={e => {
@@ -158,7 +158,7 @@ const Payment = () => {
                 />
               </div>
               <div className="flex-1">
-                <label className="block text-sm text-gray-400 mb-1">CVV</label>
+                <label className="block text-sm text-gray-400 mb-1">{t("cvv")}</label>
                 <input
                   type="password" value={cvv}
                   onChange={e => setCvv(e.target.value.replace(/\D/g, "").slice(0, 3))}
@@ -173,7 +173,7 @@ const Payment = () => {
             type="submit" disabled={paying}
             className="w-full mt-6 bg-primary hover:bg-primary/90 text-white py-3 rounded-lg font-semibold transition cursor-pointer disabled:opacity-60"
           >
-            {paying ? "Processing..." : `Pay ${currency}${booking?.amount}`}
+            {paying ? t("processing") : `Pay ${currency}${booking?.amount}`}
           </button>
           <button
             type="button"
@@ -181,9 +181,9 @@ const Payment = () => {
             disabled={paying}
             className="w-full mt-3 border border-gray-600 hover:border-gray-400 text-gray-400 hover:text-white py-3 rounded-lg font-semibold transition cursor-pointer disabled:opacity-60"
           >
-            Pay Later
+            {t("pay_later")}
           </button>
-          <p className="text-center text-xs text-gray-500 mt-3">🔒 This is a mock payment — no real charges</p>
+          <p className="text-center text-xs text-gray-500 mt-3">🔒 {t("mock_payment")}</p>
         </form>
       </div>
     </div>

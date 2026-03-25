@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 const MyBookings = () => {
   const currency = import.meta.env.VITE_CURRENCY;
 
-  const { axios, getToken, user, image_base_url } = useAppContext();
+  const { axios, getToken, user, image_base_url, t } = useAppContext();
 
   const [bookings, setBookings] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -41,10 +41,10 @@ const MyBookings = () => {
       <div>
         <BlurCircle bottom="0px" left="600px" />
       </div>
-      <h1 className="text-lg font-semibold mb-4">My Bookings</h1>
+      <h1 className="text-lg font-semibold mb-4">{t("my_bookings")}</h1>
 
       {bookings.length === 0 && (
-        <p className="text-gray-400 mt-10">You have no bookings yet.</p>
+        <p className="text-gray-400 mt-10">{t("no_bookings")}</p>
       )}
 
       {bookings.map((item, index) => (
@@ -76,11 +76,11 @@ const MyBookings = () => {
               </p>
               {item.isPaid ? (
                 <span className="px-3 py-1 rounded-full text-xs font-semibold bg-green-600/20 text-green-400 border border-green-600/30">
-                  Paid
+                  {t("paid")}
                 </span>
               ) : (
                 <span className="px-3 py-1 rounded-full text-xs font-semibold bg-yellow-500/20 text-yellow-400 border border-yellow-500/30">
-                  Unpaid
+                  {t("unpaid")}
                 </span>
               )}
             </div>
@@ -89,16 +89,16 @@ const MyBookings = () => {
                 to={`/payment/${item.id}`}
                 className="bg-primary hover:bg-primary/90 transition px-4 py-1.5 mb-3 text-sm rounded-full font-medium cursor-pointer text-center"
               >
-                Pay Now
+                {t("pay_now")}
               </Link>
             )}
             <div className="text-sm">
               <p>
-                <span className="text-gray-400">Total Tickets:</span>{" "}
+                <span className="text-gray-400">{t("total_tickets")}</span>{" "}
                 {item.bookedSeats.length}
               </p>
               <p>
-                <span className="text-gray-400">Seat Number:</span>{" "}
+                <span className="text-gray-400">{t("seat_number")}</span>{" "}
                 {item.bookedSeats.join(", ")}
               </p>
             </div>

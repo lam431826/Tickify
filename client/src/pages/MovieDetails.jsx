@@ -22,6 +22,7 @@ const MovieDetails = () => {
     fetchFavoriteMovies,
     favoriteMovies,
     image_base_url,
+    t,
   } = useAppContext();
 
   const getShow = async () => {
@@ -75,7 +76,7 @@ const MovieDetails = () => {
           </h1>
           <div className="flex items-center gap-2 text-gray-300">
             <StarIcon className="w-5 h-5 text-primary fill-primary" />
-            {show.movie.vote_average.toFixed(1)} User Rating
+            {show.movie.vote_average.toFixed(1)} {t("user_rating")}
           </div>
           <p className="text-gray-400 mt-2 text-sm leading-tight max-w-xl">
             {show.movie.overview}
@@ -90,13 +91,13 @@ const MovieDetails = () => {
           <div className="flex items-center flex-wrap gap-4 mt-4">
             <button className="flex items-center gap-2 px-7 py-3 text-sm bg-gray-800 hover:bg-gray-900 transition rounded-md font-medium cursor-pointer active:scale-95">
               <PlayCircleIcon className="w-5 h-5" />
-              Watch Trailer
+              {t("watch_trailer")}
             </button>
             <a
               href="#dateSelect"
               className="px-10 py-3 text-sm bg-primary hover:bg-primary-dull transition rounded-md font-medium cursor-pointer active:scale-95"
             >
-              Buy Tickets
+              {t("buy_tickets")}
             </a>
             <button
               onClick={handleFavorite}
@@ -114,7 +115,7 @@ const MovieDetails = () => {
         </div>
       </div>
 
-      <p className="text-lg fontmedium mt-20">Your Favorite Cast</p>
+      <p className="text-lg fontmedium mt-20">{t("favorite_cast")}</p>
       <div className="overflow-x-auto no-scrollbar mt-8 pb-4">
         <div className="flex items-center gap-4 w-max px-4">
           {show.movie.casts.slice(0, 12).map((cast, index) => (
@@ -132,7 +133,7 @@ const MovieDetails = () => {
 
       <DateSelect dateTime={show.dateTime} id={id} />
 
-      <p className="text-lg font-medium mt-20 mb-8">You May Also Like</p>
+      <p className="text-lg font-medium mt-20 mb-8">{t("you_may_like")}</p>
 
       <div className="flex flex-wrap max-sm:justify-center gap-8">
         {shows.slice(0, 4).map((movie, index) => (
@@ -148,7 +149,7 @@ const MovieDetails = () => {
           }}
           className="px-10 py-3 text-sm bg-primary hover:bg-primary-dull transition rounded-md font-medium cursor-pointer"
         >
-          Show more
+          {t("show_more")}
         </button>
       </div>
     </div>

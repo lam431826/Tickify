@@ -6,7 +6,7 @@ import timeFormat from "../lib/timeFormat";
 
 const HeroSection = () => {
   const navigate = useNavigate();
-  const { shows, image_base_url } = useAppContext();
+  const { shows, image_base_url, t } = useAppContext();
   const [current, setCurrent] = useState(0);
   const [animating, setAnimating] = useState(false);
 
@@ -107,13 +107,13 @@ const HeroSection = () => {
               onClick={() => navigate(`/movies/${slide._id}`)}
               className="flex items-center gap-2 px-6 py-3 text-sm bg-primary hover:bg-primary/90 transition rounded-full font-semibold cursor-pointer"
             >
-              Buy Ticket
+              {t("hero_buy_ticket")}
             </button>
             <button
               onClick={() => navigate("/movies")}
               className="flex items-center gap-2 px-6 py-3 text-sm border border-white/30 hover:border-white/60 hover:bg-white/10 transition rounded-full font-medium cursor-pointer"
             >
-              Explore Movies
+              {t("hero_explore")}
               <ArrowRight className="w-4 h-4" />
             </button>
           </div>
