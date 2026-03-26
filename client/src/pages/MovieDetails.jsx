@@ -128,10 +128,10 @@ const MovieDetails = () => {
               className="bg-gray-700 p-2.5 rounded-full transition cursor-pointer active:scale-95"
             >
               <Heart
-                className={`w-5 h-5 ${
-                  favoriteMovies.find((movie) => movie._id === id)
+                className={`w-5 h-5 transition ${
+                  favoriteMovies.find((movie) => String(movie._id) === id)
                     ? "fill-primary text-primary"
-                    : ""
+                    : "text-white"
                 }`}
               />
             </button>

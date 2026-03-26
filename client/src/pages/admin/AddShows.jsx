@@ -62,16 +62,16 @@ const AddShows = () => {
   };
 
   const handleSubmit = async () => {
+    if (
+      !selectedMovie ||
+      Object.keys(dateTimeSelection).length === 0 ||
+      !showPrice
+    ) {
+      return toast("Missing required fields");
+    }
+
     try {
       setAddingShow(true);
-
-      if (
-        !selectedMovie ||
-        Object.keys(dateTimeSelection).length === 0 ||
-        !showPrice
-      ) {
-        return toast("Missing required fields");
-      }
 
       const showsInput = Object.entries(dateTimeSelection).map(
         ([date, time]) => ({ date, time })
