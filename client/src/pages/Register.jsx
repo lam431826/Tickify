@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 
 const Register = () => {
   const [name, setName] = useState("");
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -15,7 +16,7 @@ const Register = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const { data } = await axios.post("/api/auth/register", { name, email, password });
+      const { data } = await axios.post("/api/auth/register", { name, username, email, password });
       if (data.success) {
         login(data.token, data.user);
         toast.success("Account created successfully");
@@ -36,6 +37,12 @@ const Register = () => {
         <div>
           <label className="block text-sm text-gray-400 mb-1">{t("name")}</label>
           <input type="text" value={name} onChange={e => setName(e.target.value)} required
+            className="w-full bg-transparent border border-gray-600 rounded-md px-3 py-2 outline-none focus:border-primary" />
+        </div>
+        <div>
+          <label className="block text-sm text-gray-400 mb-1">{t("username_field")}</label>
+          <input type="text" value={username} onChange={e => setUsername(e.target.value.toLowerCase().replace(/\s/g, "_"))} required
+            placeholder={t("username_placeholder")}
             className="w-full bg-transparent border border-gray-600 rounded-md px-3 py-2 outline-none focus:border-primary" />
         </div>
         <div>

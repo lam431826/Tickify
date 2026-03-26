@@ -18,7 +18,7 @@ import java.util.Map;
  * POST /api/auth/login — public endpoint.
  * Body: {email, password}
  * Response: {success:true, token, user:{id, name, email, isAdmin}}
- *        or {success:false, message:"Invalid email or password"}
+ *        or {success:false, message:"Invalid username or password"}
  */
 @WebServlet("/api/auth/login")
 public class LoginServlet extends HttpServlet {
@@ -39,22 +39,22 @@ public class LoginServlet extends HttpServlet {
             return;
         }
 
-        String email    = body.has("email")    ? body.get("email").asText().trim() : "";
-        String password = body.has("password") ? body.get("password").asText()     : "";
+        String username = body.has("username") ? body.get("username").asText().trim() : "";
+        String password = body.has("password") ? body.get("password").asText()        : "";
 
-        if (email.isBlank() || password.isBlank()) {
+        if (username.isBlank() || password.isBlank()) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            MAPPER.writeValue(resp.getWriter(), Map.of("success", false, "message", "email and password are required"));
+            MAPPER.writeValue(resp.getWriter(), Map.of("success", false, "message", "username and password are required"));
             return;
         }
 
-        // Find user by email
-        Map<String, Object> user = UserDAO.findByEmail(email);
+        // Find user by username
+        Map<String, Object> user = UserDAO.findByUsername(username);
         if (user == null) {
             resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             Map<String, Object> error = new LinkedHashMap<>();
             error.put("success", false);
-            error.put("message", "Invalid email or password");
+            error.put("message", "Invalid username or password");
             MAPPER.writeValue(resp.getWriter(), error);
             return;
         }
@@ -65,7 +65,7 @@ public class LoginServlet extends HttpServlet {
             resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             Map<String, Object> error = new LinkedHashMap<>();
             error.put("success", false);
-            error.put("message", "Invalid email or password");
+            error.put("message", "Invalid username or password");
             MAPPER.writeValue(resp.getWriter(), error);
             return;
         }
@@ -75,7 +75,7 @@ public class LoginServlet extends HttpServlet {
             resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             Map<String, Object> error = new LinkedHashMap<>();
             error.put("success", false);
-            error.put("message", "Invalid email or password");
+            error.put("message", "Invalid username or password");
             MAPPER.writeValue(resp.getWriter(), error);
             return;
         }
@@ -90,10 +90,11 @@ public class LoginServlet extends HttpServlet {
         }
 
         Map<String, Object> userInfo = new LinkedHashMap<>();
-        userInfo.put("id",      userId);
-        userInfo.put("name",    user.get("name"));
-        userInfo.put("email",   user.get("email"));
-        userInfo.put("isAdmin", user.get("isAdmin"));
+        userInfo.put("id",       userId);
+        userInfo.put("name",     user.get("name"));
+        userInfo.put("username", user.get("username"));
+        userInfo.put("email",    user.get("email"));
+        userInfo.put("isAdmin",  user.get("isAdmin"));
 
         Map<String, Object> response = new LinkedHashMap<>();
         response.put("success", true);

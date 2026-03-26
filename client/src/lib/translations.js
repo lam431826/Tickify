@@ -96,6 +96,7 @@ const translations = {
 
     // Login
     sign_in: "Sign In",
+    username: "Username",
     password: "Password",
     signing_in: "Signing in...",
     no_account: "Don't have an account?",
@@ -103,7 +104,9 @@ const translations = {
 
     // Register
     create_account: "Create Account",
-    name: "Name",
+    name: "Full Name",
+    username_field: "Username",
+    username_placeholder: "e.g. john_doe",
     creating_account: "Creating account...",
     have_account: "Already have an account?",
     signin_link: "Sign In",
@@ -215,6 +218,7 @@ const translations = {
 
     // Login
     sign_in: "Đăng Nhập",
+    username: "Tên Đăng Nhập",
     password: "Mật Khẩu",
     signing_in: "Đang Đăng Nhập...",
     no_account: "Chưa có tài khoản?",
@@ -223,6 +227,8 @@ const translations = {
     // Register
     create_account: "Tạo Tài Khoản",
     name: "Họ Tên",
+    username_field: "Tên Đăng Nhập",
+    username_placeholder: "vd: nguyen_van_a",
     creating_account: "Đang Tạo Tài Khoản...",
     have_account: "Đã có tài khoản?",
     signin_link: "Đăng Nhập",

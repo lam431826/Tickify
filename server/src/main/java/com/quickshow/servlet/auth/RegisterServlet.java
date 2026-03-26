@@ -41,12 +41,23 @@ public class RegisterServlet extends HttpServlet {
         }
 
         String name     = body.has("name")     ? body.get("name").asText().trim()     : "";
+        String username = body.has("username") ? body.get("username").asText().trim() : "";
         String email    = body.has("email")    ? body.get("email").asText().trim()    : "";
         String password = body.has("password") ? body.get("password").asText()        : "";
 
-        if (name.isBlank() || email.isBlank() || password.isBlank()) {
+        if (name.isBlank() || username.isBlank() || email.isBlank() || password.isBlank()) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            MAPPER.writeValue(resp.getWriter(), Map.of("success", false, "message", "name, email, and password are required"));
+            MAPPER.writeValue(resp.getWriter(), Map.of("success", false, "message", "name, username, email, and password are required"));
+            return;
+        }
+
+        // Check if username already exists
+        if (UserDAO.findByUsername(username) != null) {
+            resp.setStatus(HttpServletResponse.SC_CONFLICT);
+            Map<String, Object> error = new LinkedHashMap<>();
+            error.put("success", false);
+            error.put("message", "Username already taken");
+            MAPPER.writeValue(resp.getWriter(), error);
             return;
         }
 
@@ -67,7 +78,7 @@ public class RegisterServlet extends HttpServlet {
         String userId = UUID.randomUUID().toString();
 
         // Insert user
-        boolean created = UserDAO.createUser(userId, name, email, passwordHash);
+        boolean created = UserDAO.createUser(userId, name, username, email, passwordHash);
         if (!created) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             MAPPER.writeValue(resp.getWriter(), Map.of("success", false, "message", "Failed to create user"));
@@ -83,10 +94,11 @@ public class RegisterServlet extends HttpServlet {
         }
 
         Map<String, Object> userInfo = new LinkedHashMap<>();
-        userInfo.put("id",      userId);
-        userInfo.put("name",    name);
-        userInfo.put("email",   email);
-        userInfo.put("isAdmin", false);
+        userInfo.put("id",       userId);
+        userInfo.put("name",     name);
+        userInfo.put("username", username);
+        userInfo.put("email",    email);
+        userInfo.put("isAdmin",  false);
 
         Map<String, Object> response = new LinkedHashMap<>();
         response.put("success", true);

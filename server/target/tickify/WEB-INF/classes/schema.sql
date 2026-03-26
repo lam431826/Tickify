@@ -16,13 +16,18 @@ CREATE TABLE Movies (
 );
 
 CREATE TABLE Users (
-    id NVARCHAR(255) PRIMARY KEY,   -- Clerk user ID (sub claim)
+    id NVARCHAR(255) PRIMARY KEY,
     name NVARCHAR(500),
-    email NVARCHAR(500),
+    username NVARCHAR(255) UNIQUE,   -- used to login
+    email NVARCHAR(500),             -- used for verification
     password_hash NVARCHAR(255) NULL,
     is_admin BIT DEFAULT 0,
     created_at DATETIME DEFAULT GETDATE()
 );
+
+-- Migration (run if table already exists):
+-- ALTER TABLE Users ADD username NVARCHAR(255) NULL;
+-- CREATE UNIQUE INDEX UQ_Users_username ON Users(username) WHERE username IS NOT NULL;
 
 CREATE TABLE Shows (
     id NVARCHAR(36) PRIMARY KEY,    -- UUID

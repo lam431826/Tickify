@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
 
 const Login = () => {
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const { login, navigate, t } = useAppContext();
@@ -14,7 +14,7 @@ const Login = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const { data } = await axios.post("/api/auth/login", { email, password });
+      const { data } = await axios.post("/api/auth/login", { username, password });
       if (data.success) {
         login(data.token, data.user);
         toast.success("Logged in successfully");
@@ -33,8 +33,8 @@ const Login = () => {
       <form onSubmit={handleSubmit} className="bg-primary/10 border border-primary/20 rounded-xl p-8 w-full max-w-md space-y-4">
         <h1 className="text-2xl font-semibold text-center mb-6">{t("sign_in")}</h1>
         <div>
-          <label className="block text-sm text-gray-400 mb-1">{t("email")}</label>
-          <input type="email" value={email} onChange={e => setEmail(e.target.value)} required
+          <label className="block text-sm text-gray-400 mb-1">{t("username")}</label>
+          <input type="text" value={username} onChange={e => setUsername(e.target.value)} required
             className="w-full bg-transparent border border-gray-600 rounded-md px-3 py-2 outline-none focus:border-primary" />
         </div>
         <div>

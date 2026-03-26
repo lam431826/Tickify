@@ -59,7 +59,7 @@ public class UserDAO {
      * @return a Map with keys: id, name, email, isAdmin, passwordHash — or null if not found
      */
     public static Map<String, Object> findByEmail(String email) {
-        String sql = "SELECT id, name, email, is_admin, password_hash FROM Users WHERE email = ?";
+        String sql = "SELECT id, name, username, email, is_admin, password_hash FROM Users WHERE email = ?";
         try (Connection conn = DBConfig.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, email);
@@ -68,6 +68,7 @@ public class UserDAO {
                     Map<String, Object> user = new HashMap<>();
                     user.put("id",           rs.getString("id"));
                     user.put("name",         rs.getString("name"));
+                    user.put("username",     rs.getString("username"));
                     user.put("email",        rs.getString("email"));
                     user.put("isAdmin",      rs.getBoolean("is_admin"));
                     user.put("passwordHash", rs.getString("password_hash"));
@@ -76,6 +77,29 @@ public class UserDAO {
             }
         } catch (Exception e) {
             System.err.println("[UserDAO] findByEmail error: " + e.getMessage());
+        }
+        return null;
+    }
+
+    public static Map<String, Object> findByUsername(String username) {
+        String sql = "SELECT id, name, username, email, is_admin, password_hash FROM Users WHERE username = ?";
+        try (Connection conn = DBConfig.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, username);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    Map<String, Object> user = new HashMap<>();
+                    user.put("id",           rs.getString("id"));
+                    user.put("name",         rs.getString("name"));
+                    user.put("username",     rs.getString("username"));
+                    user.put("email",        rs.getString("email"));
+                    user.put("isAdmin",      rs.getBoolean("is_admin"));
+                    user.put("passwordHash", rs.getString("password_hash"));
+                    return user;
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("[UserDAO] findByUsername error: " + e.getMessage());
         }
         return null;
     }
@@ -89,14 +113,15 @@ public class UserDAO {
      * @param passwordHash the BCrypt-hashed password
      * @return true if the insert succeeded, false otherwise
      */
-    public static boolean createUser(String id, String name, String email, String passwordHash) {
-        String sql = "INSERT INTO Users (id, name, email, is_admin, password_hash) VALUES (?, ?, ?, 0, ?)";
+    public static boolean createUser(String id, String name, String username, String email, String passwordHash) {
+        String sql = "INSERT INTO Users (id, name, username, email, is_admin, password_hash) VALUES (?, ?, ?, ?, 0, ?)";
         try (Connection conn = DBConfig.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, id);
             ps.setString(2, name != null ? name : "");
-            ps.setString(3, email != null ? email : "");
-            ps.setString(4, passwordHash);
+            ps.setString(3, username != null ? username : "");
+            ps.setString(4, email != null ? email : "");
+            ps.setString(5, passwordHash);
             ps.executeUpdate();
             return true;
         } catch (Exception e) {
