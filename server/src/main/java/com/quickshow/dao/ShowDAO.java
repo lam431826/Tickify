@@ -63,20 +63,20 @@ public class ShowDAO {
 
     /**
      * Returns all shows joined with their movie, grouped for the public listing.
-     * Each unique movie returns only its earliest upcoming (or latest) show.
+     * Only includes shows that have not yet ended (show_datetime + runtime > NOW).
+     * Each unique movie returns only its earliest upcoming show.
      *
      * Shape per item: {_id, title, poster_path, vote_average, vote_count,
      *                  release_date, showPrice, showDateTime}
      */
     public static List<Map<String, Object>> getAllShowsPublic() {
-        // Get all shows, latest one per movie (by show_datetime DESC so latest is first).
-        // The client displays one card per movie with its upcoming showPrice/showDateTime.
         String sql =
             "SELECT s.id AS show_id, s.show_datetime, s.show_price, " +
             "       m.id AS movie_id, m.title, m.overview, m.poster_path, m.backdrop_path, " +
             "       m.vote_average, m.vote_count, m.release_date, m.runtime, m.genres " +
             "FROM Shows s " +
             "JOIN Movies m ON s.movie_id = m.id " +
+            "WHERE DATEADD(MINUTE, m.runtime, s.show_datetime) > GETDATE() " +
             "ORDER BY m.id, s.show_datetime ASC";
 
         // Deduplicate: keep the first (earliest) show per movie
@@ -145,11 +145,17 @@ public class ShowDAO {
     }
 
     /**
-     * Returns all shows for a given movie ID, as a dateTime map.
+     * Returns all future (not yet ended) shows for a given movie ID, as a dateTime map.
+     * A show is considered ended when show_datetime + runtime minutes < NOW.
      * Map shape: { "2024-07-10": [{time:"18:30:00", showId:"uuid"}, ...], ... }
      */
     public static Map<String, List<Map<String, Object>>> getDateTimeMapForMovie(int movieId) {
-        String sql = "SELECT id, show_datetime, show_price FROM Shows WHERE movie_id = ? ORDER BY show_datetime ASC";
+        String sql =
+            "SELECT s.id, s.show_datetime, s.show_price " +
+            "FROM Shows s JOIN Movies m ON s.movie_id = m.id " +
+            "WHERE s.movie_id = ? " +
+            "AND DATEADD(MINUTE, m.runtime, s.show_datetime) > GETDATE() " +
+            "ORDER BY s.show_datetime ASC";
         Map<String, List<Map<String, Object>>> dateTimeMap = new LinkedHashMap<>();
 
         try (Connection conn = DBConfig.getConnection();
@@ -352,6 +358,67 @@ public class ShowDAO {
         } finally {
             if (conn != null) { try { conn.setAutoCommit(true); conn.close(); } catch (Exception ignored) {} }
         }
+    }
+
+    // -----------------------------------------------------------------------
+    // Cleanup
+    // -----------------------------------------------------------------------
+
+    /**
+     * Deletes expired shows that have no bookings.
+     * A show is expired when show_datetime + movie.runtime minutes < NOW.
+     * Shows with bookings are kept so booking history remains intact.
+     *
+     * @return number of shows deleted
+     */
+    public static int deleteExpiredEmptyShows() {
+        // First collect IDs of expired shows with no bookings
+        String selectSql =
+            "SELECT s.id FROM Shows s " +
+            "JOIN Movies m ON s.movie_id = m.id " +
+            "WHERE DATEADD(MINUTE, m.runtime, s.show_datetime) < GETDATE() " +
+            "AND NOT EXISTS (SELECT 1 FROM Bookings b WHERE b.show_id = s.id)";
+
+        List<String> expiredIds = new ArrayList<>();
+        try (Connection conn = DBConfig.getConnection();
+             PreparedStatement ps = conn.prepareStatement(selectSql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) expiredIds.add(rs.getString("id"));
+        } catch (Exception e) {
+            System.err.println("[ShowDAO] deleteExpiredEmptyShows select error: " + e.getMessage());
+            return 0;
+        }
+
+        if (expiredIds.isEmpty()) return 0;
+
+        int deleted = 0;
+        for (String showId : expiredIds) {
+            Connection conn = null;
+            try {
+                conn = DBConfig.getConnection();
+                conn.setAutoCommit(false);
+                try (PreparedStatement ps = conn.prepareStatement(
+                        "DELETE FROM OccupiedSeats WHERE show_id = ?")) {
+                    ps.setString(1, showId);
+                    ps.executeUpdate();
+                }
+                try (PreparedStatement ps = conn.prepareStatement(
+                        "DELETE FROM Shows WHERE id = ?")) {
+                    ps.setString(1, showId);
+                    ps.executeUpdate();
+                }
+                conn.commit();
+                deleted++;
+            } catch (Exception e) {
+                System.err.println("[ShowDAO] deleteExpiredEmptyShows delete error: " + e.getMessage());
+                if (conn != null) { try { conn.rollback(); } catch (Exception ignored) {} }
+            } finally {
+                if (conn != null) { try { conn.setAutoCommit(true); conn.close(); } catch (Exception ignored) {} }
+            }
+        }
+
+        if (deleted > 0) System.out.println("[ShowDAO] Cleaned up " + deleted + " expired empty show(s).");
+        return deleted;
     }
 
     // -----------------------------------------------------------------------
