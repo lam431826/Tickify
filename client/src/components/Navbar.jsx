@@ -1,7 +1,7 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Logo from "./Logo";
-import { MenuIcon, SearchIcon, XIcon } from "lucide-react";
+import { HeartIcon, MenuIcon, SearchIcon, XIcon } from "lucide-react";
 import { useAppContext } from "../context/AppContext";
 
 const Navbar = () => {
@@ -63,7 +63,7 @@ const Navbar = () => {
         <Link onClick={() => { scrollTo(0, 0); setIsOpen(false); }} to="/">{t("nav_theaters")}</Link>
         <Link onClick={() => { scrollTo(0, 0); setIsOpen(false); }} to="/">{t("nav_releases")}</Link>
         {favoriteMovies.length > 0 && (
-          <Link onClick={() => { scrollTo(0, 0); setIsOpen(false); }} to="/favorite">{t("nav_favorites")}</Link>
+          <Link onClick={() => { scrollTo(0, 0); setIsOpen(false); }} to="/favorite" className="md:hidden">{t("nav_favorites")}</Link>
         )}
       </div>
 
@@ -118,6 +118,18 @@ const Navbar = () => {
             </div>
           )}
         </div>
+        {/* Favorites icon */}
+        {user && (
+          <Link to="/favorite" onClick={() => scrollTo(0, 0)} className="relative max-md:hidden">
+            <HeartIcon className={`w-6 h-6 transition ${favoriteMovies.length > 0 ? "fill-primary text-primary" : "text-gray-400 hover:text-white"}`} />
+            {favoriteMovies.length > 0 && (
+              <span className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-primary text-white text-[10px] font-bold flex items-center justify-center">
+                {favoriteMovies.length}
+              </span>
+            )}
+          </Link>
+        )}
+
         {/* Language toggle */}
         <button
           onClick={toggleLanguage}

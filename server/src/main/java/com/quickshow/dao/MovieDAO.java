@@ -173,7 +173,8 @@ public class MovieDAO {
      */
     public static List<Map<String, Object>> getFavoriteMovies(String userId) {
         List<Map<String, Object>> movies = new ArrayList<>();
-        String sql = "SELECT m.id, m.title, m.poster_path, m.vote_average, m.release_date " +
+        String sql = "SELECT m.id, m.title, m.poster_path, m.backdrop_path, " +
+                     "m.vote_average, m.release_date, m.runtime, m.genres " +
                      "FROM Movies m JOIN Favorites f ON m.id = f.movie_id " +
                      "WHERE f.user_id = ?";
         try (Connection conn = DBConfig.getConnection();
@@ -182,12 +183,23 @@ public class MovieDAO {
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     Map<String, Object> m = new LinkedHashMap<>();
-                    m.put("_id",          rs.getInt("id"));
-                    m.put("title",        rs.getString("title"));
-                    m.put("poster_path",  rs.getString("poster_path"));
-                    m.put("vote_average", rs.getDouble("vote_average"));
+                    m.put("_id",           rs.getInt("id"));
+                    m.put("title",         rs.getString("title"));
+                    m.put("poster_path",   rs.getString("poster_path"));
+                    m.put("backdrop_path", rs.getString("backdrop_path"));
+                    m.put("vote_average",  rs.getDouble("vote_average"));
+                    m.put("runtime",       rs.getInt("runtime"));
                     Date rd = rs.getDate("release_date");
-                    m.put("release_date", rd != null ? rd.toString() : null);
+                    m.put("release_date",  rd != null ? rd.toString() : null);
+                    // Parse genres JSON string into list
+                    String genresJson = rs.getString("genres");
+                    try {
+                        m.put("genres", genresJson != null
+                            ? new com.fasterxml.jackson.databind.ObjectMapper().readValue(genresJson, java.util.List.class)
+                            : new java.util.ArrayList<>());
+                    } catch (Exception ex) {
+                        m.put("genres", new java.util.ArrayList<>());
+                    }
                     movies.add(m);
                 }
             }

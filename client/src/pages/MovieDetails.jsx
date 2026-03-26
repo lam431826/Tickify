@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import BlurCircle from "../components/BlurCircle";
-import { Heart, PlayCircleIcon, StarIcon } from "lucide-react";
+import { Heart, PlayCircleIcon, StarIcon, XIcon } from "lucide-react";
 import timeFormat from "../lib/timeFormat";
 import DateSelect from "../components/DateSelect";
 import MovieCard from "../components/MovieCard";
@@ -13,6 +13,8 @@ const MovieDetails = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const [show, setShow] = useState(null);
+  const [trailerKey, setTrailerKey] = useState(null);
+  const [loadingTrailer, setLoadingTrailer] = useState(false);
 
   const {
     shows,
@@ -55,8 +57,26 @@ const MovieDetails = () => {
     }
   };
 
+  const handleWatchTrailer = async () => {
+    if (trailerKey) { setTrailerKey(trailerKey); return; }
+    setLoadingTrailer(true);
+    try {
+      const { data } = await axios.get(`/api/show/trailer/${id}`);
+      if (data.success) {
+        setTrailerKey(data.trailerKey);
+      } else {
+        toast.error("Trailer not available");
+      }
+    } catch {
+      toast.error("Failed to load trailer");
+    } finally {
+      setLoadingTrailer(false);
+    }
+  };
+
   useEffect(() => {
     getShow();
+    setTrailerKey(null);
   }, [id]);
 
   return show ? (
@@ -89,9 +109,13 @@ const MovieDetails = () => {
           </p>
 
           <div className="flex items-center flex-wrap gap-4 mt-4">
-            <button className="flex items-center gap-2 px-7 py-3 text-sm bg-gray-800 hover:bg-gray-900 transition rounded-md font-medium cursor-pointer active:scale-95">
+            <button
+              onClick={handleWatchTrailer}
+              disabled={loadingTrailer}
+              className="flex items-center gap-2 px-7 py-3 text-sm bg-gray-800 hover:bg-gray-900 transition rounded-md font-medium cursor-pointer active:scale-95 disabled:opacity-60"
+            >
               <PlayCircleIcon className="w-5 h-5" />
-              {t("watch_trailer")}
+              {loadingTrailer ? "Loading..." : t("watch_trailer")}
             </button>
             <a
               href="#dateSelect"
@@ -152,6 +176,33 @@ const MovieDetails = () => {
           {t("show_more")}
         </button>
       </div>
+
+      {/* Trailer Modal */}
+      {trailerKey && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80"
+          onClick={() => setTrailerKey(null)}
+        >
+          <div
+            className="relative w-full max-w-4xl mx-4 aspect-video"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={() => setTrailerKey(null)}
+              className="absolute -top-10 right-0 text-white hover:text-gray-300 transition cursor-pointer"
+            >
+              <XIcon className="w-7 h-7" />
+            </button>
+            <iframe
+              src={`https://www.youtube.com/embed/${trailerKey}?autoplay=1`}
+              title="Trailer"
+              allow="autoplay; encrypted-media"
+              allowFullScreen
+              className="w-full h-full rounded-xl"
+            />
+          </div>
+        </div>
+      )}
     </div>
   ) : (
     <Loading />

@@ -3,6 +3,7 @@ package com.quickshow.servlet.show;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.quickshow.dao.MovieDAO;
 import com.quickshow.dao.ShowDAO;
+import com.quickshow.util.TmdbUtil;
 
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -45,6 +46,31 @@ public class GetShowByIdServlet extends HttpServlet {
         }
 
         String idStr = pathInfo.substring(1); // remove leading "/"
+
+        // Handle /api/show/trailer/{movieId}
+        if (idStr.startsWith("trailer/")) {
+            String trailerIdStr = idStr.substring("trailer/".length());
+            int trailerMovieId;
+            try {
+                trailerMovieId = Integer.parseInt(trailerIdStr);
+            } catch (NumberFormatException e) {
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                writeError(resp, "Invalid movie ID for trailer");
+                return;
+            }
+            String key = TmdbUtil.fetchTrailerKey(trailerMovieId);
+            Map<String, Object> trailerResp = new LinkedHashMap<>();
+            if (key != null) {
+                trailerResp.put("success", true);
+                trailerResp.put("trailerKey", key);
+            } else {
+                trailerResp.put("success", false);
+                trailerResp.put("message", "Trailer not found");
+            }
+            MAPPER.writeValue(resp.getWriter(), trailerResp);
+            return;
+        }
+
         int movieId;
         try {
             movieId = Integer.parseInt(idStr);

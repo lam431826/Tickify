@@ -22,6 +22,7 @@ D:\PRJ301\Assignment\QuickShow-main\server\src\main\java\com\quickshow\servlet\b
 D:\PRJ301\Assignment\QuickShow-main\server\src\main\java\com\quickshow\servlet\show\GetNowPlayingServlet.java
 D:\PRJ301\Assignment\QuickShow-main\server\src\main\java\com\quickshow\dao\UserDAO.java
 D:\PRJ301\Assignment\QuickShow-main\server\src\main\java\com\quickshow\dao\MovieDAO.java
+D:\PRJ301\Assignment\QuickShow-main\server\src\main\java\com\quickshow\servlet\show\GetTrailerServlet.java
 D:\PRJ301\Assignment\QuickShow-main\server\src\main\java\com\quickshow\filter\CORSFilter.java
 D:\PRJ301\Assignment\QuickShow-main\server\src\main\java\com\quickshow\servlet\show\GetAllShowsServlet.java
 D:\PRJ301\Assignment\QuickShow-main\server\src\main\java\com\quickshow\servlet\auth\LoginServlet.java

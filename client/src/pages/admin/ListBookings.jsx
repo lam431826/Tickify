@@ -56,17 +56,17 @@ const ListBookings = () => {
   return !isLoading ? (
     <>
       <Title text1="List" text2="Bookings" />
-      <div className="max-w-4xl mt-6 overflow-x-auto">
-        <table className="w-full border-collapse rounded-md overflow-hidden text-nowrap">
+      <div className="max-w-4xl mt-6">
+        <table className="w-full border-collapse rounded-md overflow-hidden table-fixed">
           <thead>
             <tr className="bg-primary/20 text-left text-white">
-              <th className="p-2 font-medium pl-5">User Name</th>
-              <th className="p-2 font-medium">Movie Name</th>
-              <th className="p-2 font-medium">Show Time</th>
-              <th className="p-2 font-medium">Seats</th>
-              <th className="p-2 font-medium">Amount</th>
-              <th className="p-2 font-medium">Status</th>
-              <th className="p-2 font-medium">Actions</th>
+              <th className="p-2 font-medium pl-5 w-28">User Name</th>
+              <th className="p-2 font-medium w-36">Movie Name</th>
+              <th className="p-2 font-medium w-36">Show Time</th>
+              <th className="p-2 font-medium w-24">Seats</th>
+              <th className="p-2 font-medium w-20">Amount</th>
+              <th className="p-2 font-medium w-20">Status</th>
+              <th className="p-2 font-medium w-28">Actions</th>
             </tr>
           </thead>
           <tbody className="text-sm font-light">
@@ -75,10 +75,10 @@ const ListBookings = () => {
                 key={index}
                 className="border-b border-primary/20 bg-primary/5 even:bg-primary/10"
               >
-                <td className="p-2 min-w-45 pl-5">{item.user.name}</td>
-                <td className="p-2">{item.show.movie.title}</td>
-                <td className="p-2">{dateFormat(item.show.showDateTime)}</td>
-                <td className="p-2">
+                <td className="p-2 pl-5 truncate max-w-0" title={item.user.name}>{item.user.name}</td>
+                <td className="p-2 truncate max-w-0" title={item.show.movie.title}>{item.show.movie.title}</td>
+                <td className="p-2 truncate max-w-0">{dateFormat(item.show.showDateTime)}</td>
+                <td className="p-2 truncate max-w-0">
                   {Object.keys(item.bookedSeats)
                     .map((seat) => item.bookedSeats[seat])
                     .join(", ")}

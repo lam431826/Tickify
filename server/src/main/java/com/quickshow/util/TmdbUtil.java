@@ -52,6 +52,36 @@ public class TmdbUtil {
     }
 
     /**
+     * Fetches the YouTube trailer key for a movie from TMDB.
+     * Returns the key string (e.g. "dQw4w9WgXcQ") or null if not found.
+     */
+    public static String fetchTrailerKey(int movieId) {
+        String apiKey = getApiKey();
+        if (apiKey == null) return null;
+        String url = BASE_URL + "/movie/" + movieId + "/videos?api_key=" + apiKey + "&language=en-US";
+        JsonNode node = fetchJson(url);
+        if (node == null) return null;
+        JsonNode results = node.get("results");
+        if (results == null || !results.isArray()) return null;
+        // Prefer official YouTube trailer
+        for (JsonNode v : results) {
+            if ("YouTube".equals(v.path("site").asText())
+                    && "Trailer".equals(v.path("type").asText())
+                    && v.path("official").asBoolean(false)) {
+                return v.path("key").asText(null);
+            }
+        }
+        // Fallback: any YouTube trailer
+        for (JsonNode v : results) {
+            if ("YouTube".equals(v.path("site").asText())
+                    && "Trailer".equals(v.path("type").asText())) {
+                return v.path("key").asText(null);
+            }
+        }
+        return null;
+    }
+
+    /**
      * Extracts genres JSON string from TMDB movie details node.
      * Format: [{"name":"Action"},{"name":"Drama"}]
      */

@@ -188,16 +188,16 @@ const ListShows = () => {
         )}
       </div>
 
-      <div className="max-w-4xl mt-4 overflow-x-auto">
-        <table className="w-full border-collapse rounded-md overflow-hidden text-nowrap">
+      <div className="max-w-4xl mt-4">
+        <table className="w-full border-collapse rounded-md overflow-hidden table-fixed">
           <thead>
             <tr className="bg-primary/20 text-left text-white">
-              <th className="p-2 font-medium pl-5">Movie Name</th>
-              <th className="p-2 font-medium">Show Time</th>
-              <th className="p-2 font-medium">Total Bookings</th>
-              <th className="p-2 font-medium">Earnings</th>
-              <th className="p-2 font-medium">Price</th>
-              <th className="p-2 font-medium">Actions</th>
+              <th className="p-2 font-medium pl-5 w-36">Movie Name</th>
+              <th className="p-2 font-medium w-36">Show Time</th>
+              <th className="p-2 font-medium w-24">Bookings</th>
+              <th className="p-2 font-medium w-24">Earnings</th>
+              <th className="p-2 font-medium w-20">Price</th>
+              <th className="p-2 font-medium w-36">Actions</th>
             </tr>
           </thead>
           <tbody className="text-sm font-light">
@@ -212,7 +212,7 @@ const ListShows = () => {
               editingId === show._id ? (
                 /* ── Inline edit row ── */
                 <tr key={index} className="border-b border-primary/20 bg-primary/10">
-                  <td className="p-2 pl-5 text-gray-300">{show.movie.title}</td>
+                  <td className="p-2 pl-5 truncate max-w-0 text-gray-300" title={show.movie.title}>{show.movie.title}</td>
                   <td className="p-2">
                     <input
                       type="datetime-local"
@@ -255,7 +255,7 @@ const ListShows = () => {
                   key={index}
                   className="border-b border-primary/10 bg-primary/5 even:bg-primary/10"
                 >
-                  <td className="p-2 min-w-45 pl-5">{show.movie.title}</td>
+                  <td className="p-2 pl-5 truncate max-w-0" title={show.movie.title}>{show.movie.title}</td>
                   <td className="p-2">{dateFormat(show.showDateTime)}</td>
                   <td className="p-2">{Object.keys(show.occupiedSeats).length}</td>
                   <td className="p-2">

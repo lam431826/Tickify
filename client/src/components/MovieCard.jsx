@@ -15,20 +15,26 @@ const MovieCard = ({ movie }) => {
           navigate(`/movies/${movie._id}`);
           scrollTo(0, 0);
         }}
-        src={image_base_url + movie.backdrop_path}
+        src={image_base_url + (movie.backdrop_path || movie.poster_path || "")}
         alt="poster"
+        onError={(e) => { e.target.style.display = "none"; }}
         className="rounded-lg h-52 w-full object-cover object-right-bottom cursor-pointer"
       />
 
       <p className="font-semibold mt-2 truncate">{movie.title}</p>
 
       <p className="text-sm text-gray-400 mt-2">
-        {new Date(movie.release_date).getFullYear()} •{" "}
-        {movie.genres
-          .slice(0, 2)
-          .map((genre) => genre.name)
-          .join(" | ")}{" "}
-        • {timeFormat(movie.runtime)}
+        {movie.release_date ? new Date(movie.release_date).getFullYear() : "—"}
+        {(movie.genres || []).length > 0 && (
+          <> •{" "}
+            {(movie.genres || [])
+              .slice(0, 2)
+              .map((g) => (typeof g === "string" ? g : g?.name ?? ""))
+              .filter(Boolean)
+              .join(" | ")}
+          </>
+        )}
+        {movie.runtime > 0 && <> • {timeFormat(movie.runtime)}</>}
       </p>
 
       <div className="flex items-center justify-between mt-4 pb-3">
@@ -43,7 +49,7 @@ const MovieCard = ({ movie }) => {
         </button>
         <p className="flex items-center gap-1 text-sm text-gray-400 mt-1 pr-1">
           <StarIcon className="w-4 h-4 text-primary fill-primary" />
-          {movie.vote_average.toFixed(1)}
+          {movie.vote_average != null ? Number(movie.vote_average).toFixed(1) : "N/A"}
         </p>
       </div>
     </div>

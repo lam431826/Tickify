@@ -31,3 +31,4 @@ com\quickshow\servlet\admin\DeleteBookingServlet.class
 com\quickshow\servlet\booking\PayBookingServlet.class
 com\quickshow\servlet\booking\GetBookingServlet.class
 com\quickshow\servlet\show\GetShowByIdServlet.class
+com\quickshow\servlet\show\GetTrailerServlet.class
